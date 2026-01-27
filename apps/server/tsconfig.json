@@ -1,6 +1,6 @@
 {
+  "extends": "../../packages/typescript-config/base.json",
   "compilerOptions": {
-    "module": "commonjs",
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
@@ -14,6 +14,7 @@
     "skipLibCheck": true,
     "strictNullChecks": false,
     "resolveJsonModule": true,
+    "composite": false,
     "paths": {
       "@repo/blockchain/*": ["../../packages/blockchain/*"]
     }
