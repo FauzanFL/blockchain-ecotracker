@@ -4,6 +4,8 @@ import { createPublicClient, createWalletClient, http } from 'viem';
 import { Account, privateKeyToAccount } from 'viem/accounts';
 import { polygonAmoy } from 'viem/chains';
 import * as CarbonTrackerABI from '@repo/blockchain/out/CarbonTracker.sol/CarbonTracker.json';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { EmissionLog } from '../generated/prisma/client';
 
 @Injectable()
 export class BlockchainService implements OnModuleInit {
@@ -12,7 +14,10 @@ export class BlockchainService implements OnModuleInit {
   private walletClient: any;
   private account: Account;
 
-  constructor(private configService: ConfigService) {}
+  constructor(
+    private configService: ConfigService,
+    private prisma: PrismaService,
+  ) {}
 
   onModuleInit() {
     const privateKey = this.configService.get<string>(
@@ -112,6 +117,44 @@ export class BlockchainService implements OnModuleInit {
         error instanceof Error ? error.message : String(error);
       this.logger.error(`Failed to record emission: ${errorMessage}`);
       throw error;
+    }
+  }
+
+  async settlePendingEmissions(address: string) {
+    const pendingLogs: EmissionLog[] = await this.prisma.emissionLog.findMany({
+      where: {
+        factoryAddress: address,
+        isSettled: false,
+      },
+    });
+
+    if (pendingLogs.length == 0) {
+      return { message: 'No pending emissions to settle' };
+    }
+
+    const totalAmmount = pendingLogs.reduce((acc, log) => acc + log.amount, 0);
+
+    try {
+      const result = await this.recordEmission(address, totalAmmount);
+
+      await this.prisma.emissionLog.updateMany({
+        where: {
+          id: { in: pendingLogs.map((log) => log.id) },
+        },
+        data: {
+          isSettled: true,
+          txHash: result.txHash,
+        },
+      });
+
+      return {
+        factoryAddress: address,
+        totalSettled: totalAmmount,
+        logsCount: pendingLogs.length,
+        txHash: result.txHash,
+      };
+    } catch (error) {
+      throw Error(`Failed to settle pending emissions: ${error}`);
     }
   }
 }
