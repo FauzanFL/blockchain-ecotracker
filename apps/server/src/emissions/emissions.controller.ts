@@ -1,4 +1,11 @@
-import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+} from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BlockchainService } from 'src/blockchain/blockchain.service';
 import { LogEmissionDto } from './log-emission.dto';
@@ -23,5 +30,11 @@ export class EmissionsController {
       body.factoryAddress,
       body.amount,
     );
+  }
+
+  @Get('balance/:address')
+  @ApiOperation({ summary: 'Get total emission and balance' })
+  async getBalance(@Param('address') address: string) {
+    return await this.blockchainService.getFactoryData(address);
   }
 }

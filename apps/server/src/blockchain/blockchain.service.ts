@@ -80,4 +80,38 @@ export class BlockchainService implements OnModuleInit {
       throw error;
     }
   }
+
+  async getFactoryData(address: string) {
+    try {
+      const contractAddress = this.configService.get<string>(
+        'CONTRACT_ADDRESS',
+      ) as `0x${string}`;
+
+      const totalEmissions = await this.publicClient.readContract({
+        address: contractAddress,
+        abi: CarbonTrackerABI.abi,
+        functionName: 'totalEmissions',
+        args: [address as `0x${string}`],
+      });
+
+      const balance = await this.publicClient.readContract({
+        address: contractAddress,
+        abi: CarbonTrackerABI.abi,
+        functionName: 'balanceOf',
+        args: [address as `0x${string}`],
+      });
+
+      return {
+        factory: address,
+        totalEmissions: totalEmissions.toString(),
+        balance: balance.toString(),
+        symbol: 'ECTR',
+      };
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      this.logger.error(`Failed to record emission: ${errorMessage}`);
+      throw error;
+    }
+  }
 }

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const NEST_API_URL = "http://localhost:3001/emissions/log";
-const FACTORY_WALLET = "0x70997970C51812dc3A010C7d01b50e0d17dc79ee";
+const FACTORY_WALLET = "0xDbD8c255281cf1f386A2Fd5799488ccA56b90be8";
 
 const simulateIoT = async () => {
   const emissionValue = Math.floor(Math.random() * (80 - 30 + 1) + 30);
