@@ -1,13 +1,6 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import {
-  createPublicClient,
-  createWalletClient,
-  http,
-  HttpTransport,
-  PublicClient,
-  WalletClient,
-} from 'viem';
+import { createPublicClient, createWalletClient, http } from 'viem';
 import { Account, privateKeyToAccount } from 'viem/accounts';
 import { polygonAmoy } from 'viem/chains';
 import * as CarbonTrackerABI from '@repo/blockchain/out/CarbonTracker.sol/CarbonTracker.json';
@@ -61,7 +54,7 @@ export class BlockchainService implements OnModuleInit {
       ) as `0x${string}`;
 
       const { request } = await this.publicClient.simulateContract({
-        account: this.account.address,
+        account: this.account,
         address: contractAddress,
         abi: CarbonTrackerABI.abi,
         functionName: 'recordEmissionAndReward',
