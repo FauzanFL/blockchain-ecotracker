@@ -54,4 +54,10 @@ export class EmissionsController {
       history: logs,
     };
   }
+
+  @Get('pending/:address')
+  @ApiOperation({ summary: 'Get pending emissions' })
+  async getPendingEmissions(@Param('address') address: string) {
+    return await this.emissionsService.getPendingEmissionsByAddress(address);
+  }
 }

@@ -53,4 +53,10 @@ export class EmissionsService {
       where: { factoryAddress: address },
     });
   }
+
+  async getPendingEmissionsByAddress(address: string) {
+    return await this.prisma.emissionLog.findMany({
+      where: { factoryAddress: address, isSettled: false },
+    });
+  }
 }
