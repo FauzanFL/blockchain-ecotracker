@@ -29,6 +29,7 @@ export class EmissionsService {
           id: log.id,
         },
         data: {
+          isSettled: true,
           txHash: result.txHash,
         },
       });

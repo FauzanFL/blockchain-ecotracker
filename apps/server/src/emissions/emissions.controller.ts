@@ -36,12 +36,41 @@ export class EmissionsController {
 
   @Get('balance/:address')
   @ApiOperation({ summary: 'Get total emission and balance' })
+  @ApiResponse({
+    status: 200,
+    description: 'Success',
+    example: {
+      factory: '0x...',
+      totalEmissions: '0',
+      balance: '0',
+      symbol: 'ECTR',
+    },
+  })
   async getBalance(@Param('address') address: string) {
     return await this.blockchainService.getFactoryData(address);
   }
 
   @Get('stats/:address')
   @ApiOperation({ summary: 'Get factory statistics' })
+  @ApiResponse({
+    status: 200,
+    description: 'Success',
+    example: {
+      factoryAddress: '0x...',
+      totalAmount: '0',
+      totalLogs: '0',
+      history: [
+        {
+          id: '1',
+          factoryAddress: '0x...',
+          amount: '0',
+          isSettled: false,
+          txHash: '0x...',
+          createdAt: '2021-01-01T00:00:00.000Z',
+        },
+      ],
+    },
+  })
   async getStats(@Param('address') address: string) {
     const logs: EmissionLog[] = await this.emissionsService.getLogs(address);
 
@@ -57,6 +86,20 @@ export class EmissionsController {
 
   @Get('pending/:address')
   @ApiOperation({ summary: 'Get pending emissions' })
+  @ApiResponse({
+    status: 200,
+    description: 'Success',
+    example: [
+      {
+        id: '1',
+        factoryAddress: '0x...',
+        amount: '0',
+        isSettled: false,
+        txHash: '0x...',
+        createdAt: '2021-01-01T00:00:00.000Z',
+      },
+    ],
+  })
   async getPendingEmissions(@Param('address') address: string) {
     return await this.emissionsService.getPendingEmissionsByAddress(address);
   }
