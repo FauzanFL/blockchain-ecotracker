@@ -32,6 +32,7 @@ export default function Header() {
       </button>
 
       {isPending && <LoadingScreen message="Disconnecting..." />}
+      {!isConnected && <LoadingScreen message="Wallet Not Connected" />}
     </header>
   );
 }
