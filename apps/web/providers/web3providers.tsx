@@ -7,7 +7,15 @@ import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider } from "wagmi";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 5,
+      retry: 1,
+      refetchOnWindowFocus: false,
+    }
+  }
+});
 
 export default function Web3Provider({
   children,
