@@ -8,8 +8,10 @@ export default function DashboardLayout({
 }>) {
   return (
     <AuthGuard>
-      <Header />
-      <main className="p-4">{children}</main>
+      <div className="min-h-screen bg-[#0f172a] text-white">
+        <Header />
+        <main className="max-w-7xl mx-auto px-6 pb-20">{children}</main>
+      </div>
     </AuthGuard>
   );
 }

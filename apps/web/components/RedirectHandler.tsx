@@ -1,18 +1,19 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useAccount } from "wagmi";
 
 export default function RedirectHandler() {
-  const { isConnected } = useAccount();
+  const { isConnected, isConnecting } = useAccount();
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
-    if (isConnected) {
+    if (!isConnecting && isConnected && pathname === "/") {
       router.push("/dashboard");
     }
-  }, [isConnected, router]);
+  }, [isConnected, isConnecting, router, pathname]);
 
   return null;
 }
