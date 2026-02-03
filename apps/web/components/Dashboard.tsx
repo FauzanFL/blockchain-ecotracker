@@ -14,7 +14,7 @@ let emissionData = {
 
 export default function Dashboard() {
   const {address} = useAccount();
-  const {data, isLoading, error} = useEmissions(address);
+  const {data} = useEmissions(address);
   
   if (data) emissionData = data;
 
@@ -55,7 +55,7 @@ export default function Dashboard() {
         </div>
         
         <div className="divide-y divide-white/5">
-          {emissionData.history.slice(0, 5).reverse().map((log: any) => (
+          {emissionData.history.toReversed().slice(0, 5).map((log: any) => (
             <EmissionRow key={log.id} log={log} />
           ))}
         </div>

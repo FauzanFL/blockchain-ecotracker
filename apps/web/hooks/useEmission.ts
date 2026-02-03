@@ -4,13 +4,11 @@ import { useEffect, useRef, useState } from "react"
 import toast from "react-hot-toast";
 
 export const useEmissions = (address: string | undefined) => {
-  const [isClient, setIsClient] = useState(false);
   const previousEmissions = useRef<number | null>(null);
 
   const query = useQuery({
     queryKey: ['emissions', address],
     queryFn: async () => {
-      console.log("Fething data")
       if (!address) return null;
 
       const baseUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -24,7 +22,6 @@ export const useEmissions = (address: string | undefined) => {
   });
 
   useEffect(() => {
-    setIsClient(true);
     if (query.data) {
       const currentCount = query.data.history.length;
 
@@ -33,7 +30,7 @@ export const useEmissions = (address: string | undefined) => {
 
         toast.success(`New emission detected! ${latestEntry.amount} kg CO2`, {
           duration: 4000,
-          position: 'top-right',
+          position: 'top-center',
         })
       }
 
