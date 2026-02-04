@@ -48,8 +48,8 @@ export default function Dashboard() {
   })
 
   return (
-    <div className="space-y-8">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="space-y-4 md:space-y-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
         <StatCard 
           title="Total Accumulated" 
           value={factoryData.totalEmissions} 
@@ -72,7 +72,7 @@ export default function Dashboard() {
         />
       </div>
 
-      <div className="p-6 bg-[#1e293b]/30 backdrop-blur-md border border-white/5 rounded-3xl">
+      <div className="p-6 pb-12 bg-[#1e293b]/30 backdrop-blur-md border border-white/5 rounded-3xl">
         <div className="flex items-center gap-2 mb-4">
           <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
           <h4 className="font-bold text-gray-300 uppercase text-xs tracking-widest">Live Analytics</h4>
