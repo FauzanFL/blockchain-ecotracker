@@ -8,7 +8,6 @@ import { PrismaService } from './prisma/prisma.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { EmissionsService } from './emissions/emissions.service';
 import { ScheduleModule } from '@nestjs/schedule';
-import { AdminController } from './admin/admin.controller';
 
 @Module({
   imports: [
@@ -19,7 +18,7 @@ import { AdminController } from './admin/admin.controller';
     ScheduleModule.forRoot(),
     PrismaModule,
   ],
-  controllers: [AppController, EmissionsController, AdminController],
+  controllers: [AppController, EmissionsController],
   providers: [AppService, BlockchainService, PrismaService, EmissionsService],
 })
 export class AppModule {}

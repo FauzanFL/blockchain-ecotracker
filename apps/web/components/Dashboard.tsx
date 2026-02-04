@@ -38,7 +38,7 @@ export default function Dashboard() {
 
   const {mutate, isPending} = useMutation({
     mutationFn: async () => {
-      return await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/admin/settle/${address}`);
+      return await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/emissions/settle/${address}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['emissions']});

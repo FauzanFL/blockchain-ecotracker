@@ -104,4 +104,18 @@ export class EmissionsController {
   async getPendingEmissions(@Param('address') address: string) {
     return await this.emissionsService.getPendingEmissionsByAddress(address);
   }
+
+  @Post('settle/:address')
+  @ApiResponse({
+    status: 200,
+    example: {
+      factoryAddress: '0x...',
+      totalSettled: 1000,
+      txHash: '0x...',
+      logCount: 10,
+    },
+  })
+  async settle(@Param('address') address: string) {
+    return await this.blockchainService.settlePendingEmissions(address);
+  }
 }
