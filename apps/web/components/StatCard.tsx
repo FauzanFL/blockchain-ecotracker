@@ -7,13 +7,14 @@ interface StatCardProps {
   value: string | number;
   unit?: string;
   icon: LucideIcon;
-  color: "emerald" | "purple";
+  color: "emerald" | "purple" | "amber";
 }
 
 export const StatCard = ({ title, value, unit, icon: Icon, color }: StatCardProps) => {
   const themes = {
     emerald: "border-emerald-500/20 bg-emerald-500/5 text-emerald-400",
     purple: "border-purple-500/20 bg-purple-500/5 text-purple-400",
+    amber: "border-amber-500/20 bg-amber-500/5 text-amber-400",
   };
 
   return (

@@ -52,12 +52,14 @@ export class EmissionsService {
   async getLogs(address: string) {
     return await this.prisma.emissionLog.findMany({
       where: { factoryAddress: address },
+      orderBy: { createdAt: 'desc' },
     });
   }
 
   async getPendingEmissionsByAddress(address: string) {
     return await this.prisma.emissionLog.findMany({
       where: { factoryAddress: address, isSettled: false },
+      orderBy: { createdAt: 'desc' },
     });
   }
 }

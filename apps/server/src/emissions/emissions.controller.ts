@@ -47,7 +47,8 @@ export class EmissionsController {
     },
   })
   async getBalance(@Param('address') address: string) {
-    return await this.blockchainService.getFactoryData(address);
+    const factoryData = await this.blockchainService.getFactoryData(address);
+    return { ...factoryData, balance: factoryData.balance / 1e18 };
   }
 
   @Get('stats/:address')
