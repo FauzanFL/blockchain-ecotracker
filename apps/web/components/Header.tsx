@@ -3,12 +3,10 @@ import { useAccount, useDisconnect } from "wagmi";
 import LoadingScreen from "./LoadingScreen";
 import { Leaf, LogOut } from "lucide-react";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
 
 export default function Header() {
   const { address, isConnected } = useAccount();
   const { disconnect, isPending: isDisconnecting } = useDisconnect();
-  const router = useRouter();
 
   const truncatedAddress = address 
     ? `${address.slice(0, 6)}...${address.slice(-4)}` 

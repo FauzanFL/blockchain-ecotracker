@@ -5,6 +5,12 @@ import EmissionChart from "./EmissionChart";
 import { StatCard } from "./StatCard";
 import { Activity, Database } from "lucide-react";
 import { EmissionRow } from "./EmissionRow";
+import { usePendingEmissions } from "@/hooks/usePendingEmission";
+import EmissionCard from "./EmissionCard";
+import { SettleButton } from "./SettleButton";
+import { QueryClient, useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 let emissionData = {
   totalAmount: 0,
@@ -12,11 +18,25 @@ let emissionData = {
   history: [],
 }
 
+const queryClient = new QueryClient();
+
 export default function Dashboard() {
   const {address} = useAccount();
   const {data} = useEmissions(address);
+  const {data: pendingEmissions} = usePendingEmissions(address);
   
   if (data) emissionData = data;
+
+  const {mutate, isPending} = useMutation({
+    mutationFn: async () => {
+      return await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/admin/settle/${address}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ['emissions']});
+      queryClient.invalidateQueries({queryKey: ['pending-emissions']});
+      toast.success("All pending emissions settled");
+    }
+  })
 
   return (
     <div className="space-y-8">
@@ -44,22 +64,20 @@ export default function Dashboard() {
         <EmissionChart data={emissionData.history} />
       </div>
 
-      <div className="bg-[#1e293b]/60 backdrop-blur-2xl border border-white/10 rounded-3xl overflow-hidden shadow-2xl">
-        <div className="p-6 border-b border-white/5 bg-white/5 flex justify-between items-center">
-          <h4 className="font-bold text-white tracking-widest uppercase text-sm">Latest Activity</h4>
-          <div className="flex gap-1">
-            <div className="w-1 h-1 bg-emerald-500 rounded-full" />
-            <div className="w-1 h-1 bg-emerald-500/50 rounded-full" />
-            <div className="w-1 h-1 bg-emerald-500/20 rounded-full" />
-          </div>
-        </div>
-        
-        <div className="divide-y divide-white/5">
-          {emissionData.history.toReversed().slice(0, 5).map((log: any) => (
+      <EmissionCard title="Latest Activity">
+        {emissionData.history.toReversed().slice(0, 5).map((log: any) => (
             <EmissionRow key={log.id} log={log} />
           ))}
+      </EmissionCard>
+
+      <EmissionCard title="Pending Activity">
+        <div className="flex justify-end p-4">
+          <SettleButton onClick={() => mutate()} isLoading={isPending} />
         </div>
-      </div>
+        {pendingEmissions?.toReversed().map((log: any) => (
+            <EmissionRow key={log.id} log={log} />
+          ))}
+      </EmissionCard>
     </div>
   );
 }

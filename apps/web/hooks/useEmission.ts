@@ -17,8 +17,8 @@ export const useEmissions = (address: string | undefined) => {
       )
       return data;
     },
-    enabled: true,
-    refetchInterval: 10000,
+    enabled: !!address,
+    refetchInterval: 5000,
   });
 
   useEffect(() => {
