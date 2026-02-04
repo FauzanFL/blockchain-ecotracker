@@ -1,16 +1,35 @@
 "use client";
+import { Check, Copy, ExternalLink } from "lucide-react";
 import { motion } from "motion/react";
+import { useState } from "react";
 
 interface EmissionRowProps {
   log: {
     id: string;
     createdAt: string;
     amount: number;
+    txHash: string;
     isSettled: boolean;
   };
 }
 
 export const EmissionRow = ({ log }: EmissionRowProps) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(log.txHash);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy!", err);
+    }
+  };
+
+  const truncateHash = (hash: string) => {
+    return `${hash.slice(0, 6)}...${hash.slice(-4)}`;
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, x: -10 }}
@@ -24,6 +43,32 @@ export const EmissionRow = ({ log }: EmissionRowProps) => {
         <span className="text-sm font-medium text-gray-300">
           {new Date(log.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
         </span>
+      </div>
+
+      <div className="hidden md:flex flex-col items-start gap-1">
+        <span className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Tx Hash</span>
+        <div className="flex items-center gap-2">
+          <code className="text-xs text-purple-400 bg-purple-500/5 px-2 py-0.5 rounded border border-purple-500/10 font-mono">
+            {truncateHash(log.txHash)}
+          </code>
+          
+          <button
+            onClick={() => handleCopy()}
+            className="text-gray-500 hover:text-emerald-400 transition-colors p-1"
+            title="Copy Hash"
+          >
+            {copied ? <Check size={14} className="text-emerald-500" /> : <Copy size={14} />}
+          </button>
+
+          <a
+            href={`https://amoy.polygonscan.com/tx/${log.txHash}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-500 hover:text-purple-400 transition-colors"
+          >
+            <ExternalLink size={14} />
+          </a>
+        </div>
       </div>
 
       <div className="flex flex-col items-end md:items-center">

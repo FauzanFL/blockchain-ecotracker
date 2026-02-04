@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-export const useEctrBalance = (address: string | undefined) => {
+export const useBalance = (address: string | undefined) => {
   return useQuery({
     queryKey: ['ectr-balance', address],
     queryFn: async () => {

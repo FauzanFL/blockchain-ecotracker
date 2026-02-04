@@ -11,7 +11,7 @@ import { SettleButton } from "./SettleButton";
 import { QueryClient, useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useEctrBalance } from "@/hooks/useEctrBalance";
+import { useBalance } from "@/hooks/useBalance";
 
 let emissionData = {
   totalAmount: 0,
@@ -31,7 +31,7 @@ export default function Dashboard() {
   const {address} = useAccount();
   const {data} = useEmissions(address);
   const {data: pendingEmissions} = usePendingEmissions(address);
-  const {data: factory} = useEctrBalance(address);
+  const {data: factory} = useBalance(address);
   
   if (data) emissionData = data;
   if (factory) factoryData = factory;
