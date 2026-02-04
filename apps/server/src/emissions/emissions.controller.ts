@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   Get,
+  NotFoundException,
   Param,
   Post,
 } from '@nestjs/common';
@@ -116,6 +117,11 @@ export class EmissionsController {
     },
   })
   async settle(@Param('address') address: string) {
+    const logs =
+      await this.emissionsService.getPendingEmissionsByAddress(address);
+    if (logs.length == 0) {
+      throw new NotFoundException('No pending emissions to settle');
+    }
     return await this.blockchainService.settlePendingEmissions(address);
   }
 }
