@@ -1,0 +1,26 @@
+# Ignore dependencies
+node_modules
+**/node_modules
+
+# Ignore build/output
+**/dist
+**/.next
+**/.turbo
+**/dist
+**/build
+**/.cache
+
+# Ignore git and cache
+.git
+.gitignore
+.turbo
+.npmrc
+.pnpm-store
+
+# Ignore local env
+.env
+.env*.local
+
+# Ignore log
+*.log
+npm-debug.log*
