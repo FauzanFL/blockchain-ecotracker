@@ -1,135 +1,82 @@
-# Turborepo starter
+# 🚀 Eco Tracker
 
-This Turborepo starter is maintained by the Turborepo core team.
+Eco Tracke is a blockchain-based carbon emission tracking system. This project is built using a monorepo architecture with **Turborepo**, featuring a **NestJS** backend, a **Next.js** frontend, and a specialized **Simulator** for emission data.
 
-## Using this example
+## 📋 Prerequisites
 
-Run the following command:
+Before you begin, ensure you have the following installed:
 
-```sh
-npx create-turbo@latest
+- **Node.js**: v20 or higher
+- **pnpm**: v8 or higher (essential for workspace management)
+- **Docker & Docker Desktop**: Required for the containerized setup
+- **PostgreSQL**: Required only if running the project natively (Method 1)
+
+---
+
+## 🛠 Project Structure
+
+```text
+.
+├── apps/
+│   ├── server/       # Backend API (NestJS + Prisma)
+│   ├── web/          # Frontend Dashboard (Next.js + Tailwind)
+│   └── simulator/    # Emission data simulation script
+├── packages/         # Shared configurations (ESLint, TSConfig)
+├── docker-compose.yml # Orchestration for all services
+└── pnpm-workspace.yaml
 ```
 
-## What's inside?
+## 🚦 How to Run the Project
 
-This Turborepo includes the following packages/apps:
+You can choose between running the project natively on your machine or using Docker for a fully isolated environment.
 
-### Apps and Packages
+### Method 1: Running With Turborepo (Native)
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+1. **Database Setup**: Ensure PostgreSQL is running locally. Create an empty database and copy .env.example to .env in the **server** directory:
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+   ```
+   SERVER_PORT=3000
+   SERVER_HOST=0.0.0.0 # default
+   RPC_URL=https://rpc-amoy.polygon.technology
+   PRIVATE_KEY=YOUR_PIRVATE_KEY
+   CONTRACT_ADDRESS=YOUR_CONTRACT_ADDRESS
+   DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/DB_NAME"
+   ```
 
-### Utilities
+2. **Install Dependecies**
+   ```
+   pnpm install
+   ```
+3. **Database Migration**: Generate the Prisma client and push the schema to your local database:
+   ```
+   pnpm --filter server exec prisma migrate dev
+   ```
+4. **Start Development Mode**
 
-This Turborepo has some additional tools already setup for you:
+   ```
+   pnpm dev
+   ```
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+   - Web: http://localhost:3000
+   - Server: http://localhost:3001
 
-### Build
+### Method 2: Running with Docker Compose (Recommended)
 
-To build all apps and packages, run the following command:
+Best for consistent environments. This method handles the database, migrations, and all service networking automatically.
 
-```
-cd my-turborepo
+1. **Environment Configuration**: Copy .env.example to .env in the **root** directory and make sure your .env file uses 0.0.0.0 for the host and refers to the service name for connectivity:
 
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
+   ```
+   SERVER_PORT=3001
+   API_URL=http://server:3001
+   DB_HOST=db
+   DB_PORT=5432
+   ```
 
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
-```
+2. **Build and Launch**:
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+   ```
+   docker compose up --build
+   ```
 
-```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+3. **Automatic Migrations**: The server container is configured to run prisma migrate deploy automatically. It uses a healthcheck to ensure the database is ready before starting the migration.
