@@ -35,23 +35,20 @@ You can choose between running the project natively on your machine or using Doc
 1. **Database Setup**: Ensure PostgreSQL is running locally. Create an empty database and copy .env.example to .env in the **server** directory:
 
    ```
-   SERVER_PORT=3000
-   SERVER_HOST=0.0.0.0 # default
-   RPC_URL=https://rpc-amoy.polygon.technology
-   PRIVATE_KEY=YOUR_PIRVATE_KEY
-   CONTRACT_ADDRESS=YOUR_CONTRACT_ADDRESS
    DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/DB_NAME"
    ```
 
-2. **Install Dependecies**
+2. **Setup All Environment**: Copy .env.example to .env in **server**, **simulator**, and **web** directory. And adjust the value
+
+3. **Install Dependecies**
    ```
    pnpm install
    ```
-3. **Database Migration**: Generate the Prisma client and push the schema to your local database:
+4. **Database Migration**: Generate the Prisma client and push the schema to your local database:
    ```
    pnpm --filter server exec prisma migrate dev
    ```
-4. **Start Development Mode**
+5. **Start Development Mode**
 
    ```
    pnpm dev
@@ -62,7 +59,7 @@ You can choose between running the project natively on your machine or using Doc
 
 ### Method 2: Running with Docker Compose (Recommended)
 
-Best for consistent environments. This method handles the database, migrations, and all service networking automatically.
+Best for consistent environments. This method handles the database, migrations, and all service networking automatically. You just need docker and docker compose installed.
 
 1. **Environment Configuration**: Copy .env.example to .env in the **root** directory and make sure your .env file uses 0.0.0.0 for the host and refers to the service name for connectivity:
 
@@ -80,3 +77,9 @@ Best for consistent environments. This method handles the database, migrations, 
    ```
 
 3. **Automatic Migrations**: The server container is configured to run prisma migrate deploy automatically. It uses a healthcheck to ensure the database is ready before starting the migration.
+
+4. **Background Launch** (optional): After build, run this following command to run service in the background:
+
+   ```
+   docker compose up -d
+   ```
